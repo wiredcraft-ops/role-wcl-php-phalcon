@@ -1,0 +1,6 @@
+---
+- include: debian.yml
+  when: phalcon_install_from == 'ppa' and ansible_os_family == 'Debian'
+
+- include: source.yml
+  when: phalcon_install_from == 'source'

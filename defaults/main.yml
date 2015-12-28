@@ -1,0 +1,11 @@
+---
+# defaults file for wcl-php-phalcon
+
+# NOTE - php 5.6 does not support PPA phalcon - need source
+phalcon_install_from: ppa
+ppa_phalcon: ppa:phalcon/stable
+
+
+# TODO - handle source install
+# https://phalconphp.com/en/download
+# https://github.com/phalcon/cphalcon

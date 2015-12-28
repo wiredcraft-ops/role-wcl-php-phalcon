@@ -1,0 +1,56 @@
+---
+- name: APT | Install build dependencies for PHP Phalcon
+  apt:
+    name={{ item }}
+    state=present
+  when: ansible_os_family == 'Debian'
+  with_items:
+    - php5-dev 
+    - php5-mysql
+    - gcc 
+    - libpcre3-dev
+
+- name: YUM | Install build dependencies for PHP Phalcon
+  yum:
+    name={{ item }}
+    state=present
+  when: ansible_os_family == 'RedHat'
+  with_items:
+    - php-devel
+    - php-mysql
+    - gcc 
+    - libtool
+
+- name: Create temp folder
+  file:
+    name=/tmp/phalcon
+    state=directory
+
+- name: Clone source code of Phalcon PHP
+  git:
+    accept_hostkey=yes
+    repo=https://github.com/phalcon/cphalcon.git
+    dest=/tmp/phalcon
+    depth=1
+
+- name: Build PHP phalcon
+  shell:
+    chdir=/tmp/phalcon/build
+    creates=/etc/php5/mods-available/phalcon.ini
+    ./install
+
+- name: Add PHP extension
+  copy:
+    dest=/etc/php5/mods-available/{{ item }}.ini
+    content="extension={{ item }}.so"
+    owner=root
+    group=root
+  with_items:
+    - phalcon
+
+- name: Enable Phalcon extension
+  shell:
+    creates=/etc/php5/cli/conf.d/20-{{ item }}.ini
+    php5enmod -s ALL {{ item }}
+  with_items:
+    - phalcon

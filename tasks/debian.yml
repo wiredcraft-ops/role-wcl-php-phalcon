@@ -1,0 +1,15 @@
+---
+# tasks file for wcl-php-phalcon
+- name: Add PHP Phalcon PPA repository
+  apt_repository:
+    repo='{{ ppa_phalcon }}'
+    state=present
+
+- name: Install PHP Phalcon
+  apt:
+    name={{ item }}
+    state=present
+    update_cache=yes
+  with_items:
+    - php5-phalcon
+
